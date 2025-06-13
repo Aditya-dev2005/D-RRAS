@@ -33,6 +33,11 @@ A C++-based simulation platform for managing real-time disaster relief operation
 
 ---
 
+🖼️ Screenshots
+The project comes with a complete set of screenshots to visually demonstrate key functionalities, available inside the /Screenshots folder.
+
+---
+
 ## 🔍 Why This Project Stands Out
 
 > Built to demonstrate practical application of core DSA knowledge, D-RRAS focuses on real-world backend logic over UI — simulating the kind of intelligent systems used in emergency response centers, logistics management, and large-scale routing platforms.
