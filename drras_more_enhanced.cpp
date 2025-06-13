@@ -1584,6 +1584,13 @@ public:
         cin >> req.name;
         cout << BOLD << "\nPlease provide your contact number: " << RESET;
         cin >> req.phone;
+        if(req.phone.length() != 10 || !all_of(req.phone.begin(), req.phone.end(), ::isdigit)) {
+            cout << RED << "Invalid phone number. Please enter a 10-digit number.\n" << RESET;
+            Sleep(1000);
+            rescueRequestForm();
+        }
+        
+        
         cin.ignore();
 
         cout << BOLD << "\nWhich city are you reporting from?: " << RESET;
