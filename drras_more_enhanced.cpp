@@ -2140,39 +2140,43 @@ public:
     }
 
     void changeLanguage() {
-        clearScreen();
-        printCenteredTitle("LANGUAGE SELECTION");
-        printBorder();
-        
-        cout << BOLD << "1. English\n" << RESET;
-        cout << BOLD << "2. Español (Spanish)\n" << RESET;
-        cout << BOLD << "3. Français (French)\n" << RESET;
-        cout << BOLD << "4. Back\n" << RESET;
-        cout << BOLD << "\nSelect an option: " << RESET;
-        
-        int choice;
-        cin >> choice;
-        
-        switch (choice) {
-            case 1:
-                currentLanguage = "en";
-                cout << GREEN << "Language set to English.\n" << RESET;
-                break;
-            case 2:
-                currentLanguage = "es";
-                cout << GREEN << "Idioma cambiado a Español.\n" << RESET;
-                break;
-            case 3:
-                currentLanguage = "fr";
-                cout << GREEN << "Langue changée en Français.\n" << RESET;
-                break;
-            case 4:
-                return;
-            default:
-                cout << RED << "Invalid choice.\n" << RESET;
-        }
-        system("pause");
+    clearScreen();
+    printCenteredTitle("LANGUAGE SELECTION");
+    printBorder();
+    
+    cout << BOLD << "1. English\n" << RESET;
+    cout << BOLD << "2. Español (Spanish)\n" << RESET;
+    cout << BOLD << "3. Français (French)\n" << RESET;
+    cout << BOLD << "4. Back\n" << RESET;
+    cout << BOLD << "\nSelect an option: " << RESET;
+    
+    int choice;
+    cin >> choice;
+    
+    switch (choice) {
+        case 1:
+            currentLanguage = "en";
+            cout << GREEN << "Language set to English.\n" << RESET;
+            break;
+        case 2:
+            currentLanguage = "es";
+            // Set console to UTF-8 for Spanish characters
+            SetConsoleOutputCP(65001);
+            cout << GREEN << "Idioma cambiado a Español.\n" << RESET;
+            break;
+        case 3:
+            currentLanguage = "fr";
+            // Set console to UTF-8 for French characters
+            SetConsoleOutputCP(65001);
+            cout << GREEN << "Langue changée en Français.\n" << RESET;
+            break;
+        case 4:
+            return;
+        default:
+            cout << RED << "Invalid choice.\n" << RESET;
     }
+    system("pause");
+}
 
     void loginSignupMenu(RescueManagementSystem& rms, FeedbackSystem& fds) {
         clearScreen();
@@ -2252,20 +2256,20 @@ public:
         do {
             clearScreen();
             cout << BOLD << BLUE;
-            printCenteredTitle("MAIN MENU");
+            printCenteredTitle(translate("MAIN MENU"));
             printBorder();
             cout << RESET;
             
-            cout << BOLD << "1. Home\n" << RESET;
-            cout << BOLD << "2. Precautions\n" << RESET;
-            cout << BOLD << "3. Helpline Services\n" << RESET;
-            cout << BOLD << "4. Rescue Request Form\n" << RESET;
-            cout << BOLD << "5. Login/Signup\n" << RESET;
-            cout << BOLD << "6. Feedback\n" << RESET;
-            cout << BOLD << "7. Change Language\n" << RESET;
-            cout << BOLD << "8. Exit\n" << RESET;
-            cout << BOLD << "\nSelect an option: " << RESET;
-            cin >> choice;
+            cout << BOLD << "1. " << translate("home") << "\n" << RESET;
+        cout << BOLD << "2. " << translate("precautions") << "\n" << RESET;
+        cout << BOLD << "3. " << translate("helpline") << "\n" << RESET;
+        cout << BOLD << "4. " << translate("request") << "\n" << RESET;
+        cout << BOLD << "5. " << translate("login") << "\n" << RESET;
+        cout << BOLD << "6. " << translate("feedback") << "\n" << RESET;
+        cout << BOLD << "7. Change Language\n" << RESET; // This is a special case
+        cout << BOLD << "8. " << translate("exit") << "\n" << RESET;
+        cout << BOLD << "\n" << translate("select_option") << RESET;
+        cin >> choice;
             clearScreen();
             
             switch (choice) {
