@@ -1,4 +1,4 @@
-Aditya|9876543210|Earthquake|high|Delhi|Ghaziabad|Vasundhara|no|3|500|1000|400|500|1749829033|1
-Aditya|Chaturvedi|Flood|low|||Ghaziabad|no|1|100|200|50|100|1749830165|1
-Gauri|9876543210|Flood|medium|Kolkata|WestBengal|Digha|no|2|200|400|50|200|1749830230|1
-Aniket|1234567890|Flood|high|Mumbai|Maharashtra|MarineDrive|no|3|500|600|200|500|1749830341|1
+Aditya|123|1|1|1|1|1||1|1|1|1|1|1749832321|1
+Kamal|987|2|2|2|2|2|no|1|2|2|2|2|1749832348|1
+Aditya|987|1|1|delhi|1|1||1|1|11|11|1|1749832989|1
+Aditya|9876543210|Earthuake|high|Kolkata|WestBengal|Deigha|no|3|100|200|20|100|1749882749|1
