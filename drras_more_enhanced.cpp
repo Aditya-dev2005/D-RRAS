@@ -119,7 +119,6 @@ string translate(const string& key) {
     return key; // Return key if translation not found
 }
 
-// Graph class for Dijkstra's algorithm with enhanced routing
 class Graph {
 private:
     int V;
@@ -131,7 +130,10 @@ public:
         adj = new vector<pair<int, int>>[V];
     }
 
-    // Struct for hashing pairs (needed for unordered_map)
+    ~Graph() {
+        delete[] adj;
+    }
+
     struct pair_hash {
         template <class T1, class T2>
         size_t operator() (const pair<T1, T2> &pair) const {
@@ -140,82 +142,85 @@ public:
     };
 
     unordered_map<pair<int, int>, bool, pair_hash> blockedEdges;
-    unordered_map<pair<int, int>, int, pair_hash> trafficConditions; // 1-10 scale
+    unordered_map<pair<int, int>, int, pair_hash> trafficConditions;
 
     void addEdge(int u, int v, int w) {
-        adj[u].emplace_back(v, w);
-        adj[v].emplace_back(u, w);
+        if (u >= 0 && u < V && v >= 0 && v < V) {
+            adj[u].emplace_back(v, w);
+            adj[v].emplace_back(u, w);
+        }
     }
 
     void setCityName(int index, const string& name) {
-        cityNames[index] = name;
+        if (index >= 0 && index < V) {
+            cityNames[index] = name;
+        }
     }
 
     string getCityName(int index) const {
-        if (cityNames.find(index) != cityNames.end()) {
-            return cityNames.at(index);
-        }
-        return "City " + to_string(index);
+        auto it = cityNames.find(index);
+        return it != cityNames.end() ? it->second : "City " + to_string(index);
     }
 
-    // Block an edge between u and v
     void blockEdge(int u, int v) {
-        blockedEdges[make_pair(min(u, v), max(u, v))] = true;
+        if (u >= 0 && u < V && v >= 0 && v < V) {
+            blockedEdges[make_pair(min(u, v), max(u, v))] = true;
+        }
     }
 
-    // Unblock an edge between u and v
     void unblockEdge(int u, int v) {
-        blockedEdges.erase(make_pair(min(u, v), max(u, v)));
+        if (u >= 0 && u < V && v >= 0 && v < V) {
+            blockedEdges.erase(make_pair(min(u, v), max(u, v)));
+        }
     }
 
-    // Check if an edge is blocked
     bool isEdgeBlocked(int u, int v) const {
+        if (u < 0 || u >= V || v < 0 || v >= V) return false;
         auto key = make_pair(min(u, v), max(u, v));
         return blockedEdges.find(key) != blockedEdges.end();
     }
 
-    // Set traffic condition for an edge (1-10 scale)
     void setTrafficCondition(int u, int v, int condition) {
-        if (condition < 1) condition = 1;
-        if (condition > 10) condition = 10;
-        trafficConditions[make_pair(min(u, v), max(u, v))] = condition;
-    }
-
-    // Get traffic condition for an edge
-    int getTrafficCondition(int u, int v) const {
-        auto key = make_pair(min(u, v), max(u, v));
-        if (trafficConditions.find(key) != trafficConditions.end()) {
-            return trafficConditions.at(key);
+        if (u >= 0 && u < V && v >= 0 && v < V) {
+            trafficConditions[make_pair(min(u, v), max(u, v))] = max(1, min(10, condition));
         }
-        return 1; // Default to light traffic
     }
 
-    // Get adjusted weight based on traffic conditions
+    int getTrafficCondition(int u, int v) const {
+        if (u < 0 || u >= V || v < 0 || v >= V) return 1;
+        auto key = make_pair(min(u, v), max(u, v));
+        auto it = trafficConditions.find(key);
+        return it != trafficConditions.end() ? it->second : 1;
+    }
+
     int getAdjustedWeight(int u, int v, int baseWeight) const {
         if (isEdgeBlocked(u, v)) {
             return INF;
         }
-        int traffic = getTrafficCondition(u, v);
-        return baseWeight * (1 + traffic / 5); // Increase weight based on traffic
+        return baseWeight * (1 + getTrafficCondition(u, v) / 5);
     }
 
     vector<int> dijkstra(int src) {
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         vector<int> dist(V, INF);
+        if (src < 0 || src >= V) return dist;
 
-        pq.emplace(0, src);
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         dist[src] = 0;
+        pq.emplace(0, src);
 
         while (!pq.empty()) {
             int u = pq.top().second;
+            int current_dist = pq.top().first;
             pq.pop();
 
-            for (auto& neighbor : adj[u]) {
-                int v = neighbor.first;
-                int baseWeight = neighbor.second;
-                int adjustedWeight = getAdjustedWeight(u, v, baseWeight);
+            if (current_dist > dist[u]) continue;
 
-                if (dist[v] > dist[u] + adjustedWeight) {
+            for (const auto& neighbor : adj[u]) {
+                int v = neighbor.first;
+                int weight = neighbor.second;
+                int adjustedWeight = getAdjustedWeight(u, v, weight);
+
+                if (adjustedWeight != INF && dist[v] > dist[u] + adjustedWeight) {
                     dist[v] = dist[u] + adjustedWeight;
                     pq.emplace(dist[v], v);
                 }
@@ -226,25 +231,30 @@ public:
     }
 
     vector<int> getShortestPath(int src, int dest) {
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        vector<int> path;
+        if (src < 0 || src >= V || dest < 0 || dest >= V) return path;
+
         vector<int> dist(V, INF);
         vector<int> parent(V, -1);
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
-        pq.emplace(0, src);
         dist[src] = 0;
+        pq.emplace(0, src);
 
         while (!pq.empty()) {
             int u = pq.top().second;
+            int current_dist = pq.top().first;
             pq.pop();
 
             if (u == dest) break;
+            if (current_dist > dist[u]) continue;
 
-            for (auto& neighbor : adj[u]) {
+            for (const auto& neighbor : adj[u]) {
                 int v = neighbor.first;
-                int baseWeight = neighbor.second;
-                int adjustedWeight = getAdjustedWeight(u, v, baseWeight);
+                int weight = neighbor.second;
+                int adjustedWeight = getAdjustedWeight(u, v, weight);
 
-                if (dist[v] > dist[u] + adjustedWeight) {
+                if (adjustedWeight != INF && dist[v] > dist[u] + adjustedWeight) {
                     dist[v] = dist[u] + adjustedWeight;
                     parent[v] = u;
                     pq.emplace(dist[v], v);
@@ -252,7 +262,6 @@ public:
             }
         }
 
-        vector<int> path;
         if (dist[dest] == INF) return path;
 
         for (int v = dest; v != -1; v = parent[v]) {
@@ -275,7 +284,6 @@ public:
         return adj;
     }
 };
-
 // Feedback System
 struct FeedbackEntry {
     string userName;
@@ -443,7 +451,6 @@ public:
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
     return string(buffer);
 }
-
 };
 
 // Disaster Zone class for dynamic programming
@@ -1456,6 +1463,20 @@ public:
                     cout << BOLD << "Enter location: " << RESET;
                     getline(cin, location);
                     
+                    // Validate phone number
+                    if (phone.length() != 10 || !all_of(phone.begin(), phone.end(), ::isdigit)) {
+                        cout << RED << "Invalid phone number. Please enter a 10-digit number.\n" << RESET;
+                        system("pause");
+                        break;
+                    }
+                    
+                    // Validate email
+                    if (email.find('@') == string::npos || email.find('.') == string::npos) {
+                        cout << RED << "Invalid email address.\n" << RESET;
+                        system("pause");
+                        break;
+                    }
+                    
                     volunteerSystem.addVolunteer(Volunteer(name, phone, email, skills, location));
                     break;
                 }
@@ -1537,6 +1558,13 @@ public:
                     cin.ignore();
                     getline(cin, type);
                     
+                    // Validate email
+                    if (email.find('@') == string::npos || email.find('.') == string::npos) {
+                        cout << RED << "Invalid email address.\n" << RESET;
+                        system("pause");
+                        break;
+                    }
+                    
                     istringstream iss(type);
                     string token;
                     while (getline(iss, token, ',')) {
@@ -1581,28 +1609,61 @@ public:
 
         Request req;
         cout << BOLD << "\nWhat's your name?: " << RESET;
-        cin >> req.name;
-        cout << BOLD << "\nPlease provide your contact number: " << RESET;
-        cin >> req.phone;
-        if(req.phone.length() != 10 || !all_of(req.phone.begin(), req.phone.end(), ::isdigit)) {
-            cout << RED << "Invalid phone number. Please enter a 10-digit number.\n" << RESET;
-            Sleep(1000);
-            rescueRequestForm();
-        }
-        
-        
         cin.ignore();
+        getline(cin, req.name);
+        
+        // Validate name
+        if (req.name.empty()) {
+            cout << RED << "Name cannot be empty.\n" << RESET;
+            system("pause");
+            return;
+        }
+
+        bool validPhone = false;
+        while (!validPhone) {
+            cout << BOLD << "\nPlease provide your contact number: " << RESET;
+            getline(cin, req.phone);
+            
+            // Validate phone number
+            if (req.phone.length() != 10 || !all_of(req.phone.begin(), req.phone.end(), ::isdigit)) {
+                cout << RED << "Invalid phone number. Please enter a 10-digit number.\n" << RESET;
+            } else {
+                validPhone = true;
+            }
+        }
 
         cout << BOLD << "\nWhich city are you reporting from?: " << RESET;
         getline(cin, req.city);
+        if (req.city.empty()) {
+            cout << RED << "City cannot be empty.\n" << RESET;
+            system("pause");
+            return;
+        }
         addCityToNetwork(req.city); // Add city to network if not already present
 
         cout << BOLD << "\nIn which province are you located?: " << RESET;
         getline(cin, req.province);
+        if (req.province.empty()) {
+            cout << RED << "Province cannot be empty.\n" << RESET;
+            system("pause");
+            return;
+        }
+
         cout << BOLD << "\nWhat type of disaster are you reporting (e.g., Fire, Earthquake, Flood, other)?: " << RESET;
         getline(cin, req.disasterType);
+        if (req.disasterType.empty()) {
+            cout << RED << "Disaster type cannot be empty.\n" << RESET;
+            system("pause");
+            return;
+        }
+
         cout << BOLD << "\nHow severe is the disaster? (low/medium/high): " << RESET;
         getline(cin, req.severity);
+        if (req.severity.empty()) {
+            cout << RED << "Severity cannot be empty.\n" << RESET;
+            system("pause");
+            return;
+        }
         
         // Set priority based on severity
         if (req.severity == "high") req.priority = 3;
@@ -1611,15 +1672,80 @@ public:
 
         cout << BOLD << "\nPlease specify the exact location of the disaster: " << RESET;
         getline(cin, req.location);
-        cout << BOLD << "\nEstimated population affected: " << RESET;
-        cin >> req.populationAffected;
-        cout << BOLD << "\nEstimated food needed (units): " << RESET;
-        cin >> req.foodNeeded;
-        cout << BOLD << "\nEstimated water needed (liters): " << RESET;
-        cin >> req.waterNeeded;
-        cout << BOLD << "\nEstimated medical supplies needed (units): " << RESET;
-        cin >> req.medNeeded;
-        cin.ignore();
+        if (req.location.empty()) {
+            cout << RED << "Location cannot be empty.\n" << RESET;
+            system("pause");
+            return;
+        }
+
+        bool validPopulation = false;
+        while (!validPopulation) {
+            cout << BOLD << "\nEstimated population affected: " << RESET;
+            string popInput;
+            getline(cin, popInput);
+            try {
+                req.populationAffected = stoi(popInput);
+                if (req.populationAffected < 0) {
+                    cout << RED << "Population affected cannot be negative.\n" << RESET;
+                } else {
+                    validPopulation = true;
+                }
+            } catch (...) {
+                cout << RED << "Invalid input. Please enter a number.\n" << RESET;
+            }
+        }
+
+        bool validFood = false;
+        while (!validFood) {
+            cout << BOLD << "\nEstimated food needed (units): " << RESET;
+            string foodInput;
+            getline(cin, foodInput);
+            try {
+                req.foodNeeded = stoi(foodInput);
+                if (req.foodNeeded < 0) {
+                    cout << RED << "Food needed cannot be negative.\n" << RESET;
+                } else {
+                    validFood = true;
+                }
+            } catch (...) {
+                cout << RED << "Invalid input. Please enter a number.\n" << RESET;
+            }
+        }
+
+        bool validWater = false;
+        while (!validWater) {
+            cout << BOLD << "\nEstimated water needed (liters): " << RESET;
+            string waterInput;
+            getline(cin, waterInput);
+            try {
+                req.waterNeeded = stoi(waterInput);
+                if (req.waterNeeded < 0) {
+                    cout << RED << "Water needed cannot be negative.\n" << RESET;
+                } else {
+                    validWater = true;
+                }
+            } catch (...) {
+                cout << RED << "Invalid input. Please enter a number.\n" << RESET;
+            }
+        }
+
+        bool validMed = false;
+        while (!validMed) {
+            cout << BOLD << "\nEstimated medical supplies needed (units): " << RESET;
+            string medInput;
+            getline(cin, medInput);
+            try {
+                req.medNeeded = stoi(medInput);
+                if (req.medNeeded < 0) {
+                    cout << RED << "Medical supplies needed cannot be negative.\n" << RESET;
+                } else {
+                    validMed = true;
+                }
+            } catch (...) {
+                cout << RED << "Invalid input. Please enter a number.\n" << RESET;
+            }
+        }
+
         cout << BOLD << "\nIs there anything else we should know? (Add any additional comments): " << RESET;
         getline(cin, req.comments);
 
@@ -1646,7 +1772,7 @@ public:
 
         cout << BOLD << "Do you want to submit or make changes? (submit/change): " << RESET;
         string action;
-        cin >> action;
+        getline(cin, action);
         if (action == "submit") {
             saveRequestToFile(req);
             addRescueRequest(req);
@@ -1689,10 +1815,15 @@ public:
                 string item;
                 int quantity;
                 cout << BOLD << "\nEnter supply name: " << RESET;
-                cin >> item;
+                cin.ignore();
+                getline(cin, item);
                 cout << BOLD << "\nEnter quantity: " << RESET;
                 cin >> quantity;
-                addSupply(item, quantity);
+                if (quantity < 0) {
+                    cout << RED << "Quantity cannot be negative.\n" << RESET;
+                } else {
+                    addSupply(item, quantity);
+                }
                 system("pause");
                 clearScreen();
                 break;
@@ -2147,43 +2278,43 @@ public:
     }
 
     void changeLanguage() {
-    clearScreen();
-    printCenteredTitle("LANGUAGE SELECTION");
-    printBorder();
-    
-    cout << BOLD << "1. English\n" << RESET;
-    cout << BOLD << "2. Español (Spanish)\n" << RESET;
-    cout << BOLD << "3. Français (French)\n" << RESET;
-    cout << BOLD << "4. Back\n" << RESET;
-    cout << BOLD << "\nSelect an option: " << RESET;
-    
-    int choice;
-    cin >> choice;
-    
-    switch (choice) {
-        case 1:
-            currentLanguage = "en";
-            cout << GREEN << "Language set to English.\n" << RESET;
-            break;
-        case 2:
-            currentLanguage = "es";
-            // Set console to UTF-8 for Spanish characters
-            SetConsoleOutputCP(65001);
-            cout << GREEN << "Idioma cambiado a Español.\n" << RESET;
-            break;
-        case 3:
-            currentLanguage = "fr";
-            // Set console to UTF-8 for French characters
-            SetConsoleOutputCP(65001);
-            cout << GREEN << "Langue changée en Français.\n" << RESET;
-            break;
-        case 4:
-            return;
-        default:
-            cout << RED << "Invalid choice.\n" << RESET;
+        clearScreen();
+        printCenteredTitle("LANGUAGE SELECTION");
+        printBorder();
+        
+        cout << BOLD << "1. English\n" << RESET;
+        cout << BOLD << "2. Español (Spanish)\n" << RESET;
+        cout << BOLD << "3. Français (French)\n" << RESET;
+        cout << BOLD << "4. Back\n" << RESET;
+        cout << BOLD << "\nSelect an option: " << RESET;
+        
+        int choice;
+        cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                currentLanguage = "en";
+                cout << GREEN << "Language set to English.\n" << RESET;
+                break;
+            case 2:
+                currentLanguage = "es";
+                // Set console to UTF-8 for Spanish characters
+                SetConsoleOutputCP(65001);
+                cout << GREEN << "Idioma cambiado a Español.\n" << RESET;
+                break;
+            case 3:
+                currentLanguage = "fr";
+                // Set console to UTF-8 for French characters
+                SetConsoleOutputCP(65001);
+                cout << GREEN << "Langue changée en Français.\n" << RESET;
+                break;
+            case 4:
+                return;
+            default:
+                cout << RED << "Invalid choice.\n" << RESET;
+        }
+        system("pause");
     }
-    system("pause");
-}
 
     void loginSignupMenu(RescueManagementSystem& rms, FeedbackSystem& fds) {
         clearScreen();
@@ -2268,15 +2399,15 @@ public:
             cout << RESET;
             
             cout << BOLD << "1. " << translate("home") << "\n" << RESET;
-        cout << BOLD << "2. " << translate("precautions") << "\n" << RESET;
-        cout << BOLD << "3. " << translate("helpline") << "\n" << RESET;
-        cout << BOLD << "4. " << translate("request") << "\n" << RESET;
-        cout << BOLD << "5. " << translate("login") << "\n" << RESET;
-        cout << BOLD << "6. " << translate("feedback") << "\n" << RESET;
-        cout << BOLD << "7. Change Language\n" << RESET; // This is a special case
-        cout << BOLD << "8. " << translate("exit") << "\n" << RESET;
-        cout << BOLD << "\n" << translate("select_option") << RESET;
-        cin >> choice;
+            cout << BOLD << "2. " << translate("precautions") << "\n" << RESET;
+            cout << BOLD << "3. " << translate("helpline") << "\n" << RESET;
+            cout << BOLD << "4. " << translate("request") << "\n" << RESET;
+            cout << BOLD << "5. " << translate("login") << "\n" << RESET;
+            cout << BOLD << "6. " << translate("feedback") << "\n" << RESET;
+            cout << BOLD << "7. Change Language\n" << RESET; // This is a special case
+            cout << BOLD << "8. " << translate("exit") << "\n" << RESET;
+            cout << BOLD << "\n" << translate("select_option") << RESET;
+            cin >> choice;
             clearScreen();
             
             switch (choice) {
