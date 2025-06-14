@@ -1,76 +1,85 @@
-🚨 D-RRAS: Disaster Relief & Resource Allocation System
+🚨 D-RRAS: Disaster Relief & Resource Allocation System : 
 
-A C++-based simulation platform for managing real-time disaster relief operations using advanced data structures and algorithms. This project models backend logic for dynamic rescue routing, roadblock-aware navigation, resource optimization, multilingual alerting, and volunteer coordination — built entirely around core DSA principles.
+A C++-based disaster management simulation platform that leverages advanced data structures and algorithms (DSA) to model real-time decision-making during emergency situations. D-RRAS focuses on routing optimization, dynamic road block management, multilingual alerting, and volunteer coordination — emphasizing logic, not UI.
 
-📌 Full Feature Set
+📌 Full Feature Set : 
 
 ⚙️ Algorithmic Core
 
-✅ Priority Queue (Heap) for managing rescue requests by severity and timestamp.
+✅ Priority Queue (Heap): Handles incoming rescue/help requests by severity and timestamp.
 
-📍 Dijkstra's Algorithm for calculating shortest, safest evacuation routes.
+📍 Dijkstra’s Algorithm: Calculates the shortest and safest evacuation paths.
 
-🎯 Dynamic Programming (0/1 Knapsack) for resource allocation under capacity constraints.
+🎯 Dynamic Programming (Knapsack): Optimizes resource allocation under constraints.
 
-⚡ Greedy Allocation for volunteer-task matching based on skill and proximity.
+⚡ Greedy Matching: Assigns volunteers based on skill proximity and availability.
 
-⛔ Road Block Handling with real-time graph edge updates and re-routing.
+⛔ Real-Time Road Block Handling: Updates graph edges dynamically during routing.
 
-🧠 Simulated AI Priority Scoring for determining request urgency dynamically.
+🧠 AI-Inspired Priority Scoring: Simulates urgency-based triaging logic.
 
-🛠️ Functional Modules
+🛠️ Functional Modules : 
 
-🚨 Rescue Dispatch System – Prioritizes and dispatches aid requests intelligently.
+🚨 Rescue Request System: Accepts and prioritizes emergency help/resource requests.
 
-🧑‍🚒 Volunteer Management System – Register, view, and match volunteers with location & skills. Data is persistently saved.
+🙋 Volunteer Management System: Register, display, and allocate volunteers based on skills and location. Data is stored persistently.
 
-🌍 Multilingual Support – Interface available in 🇬🇧 English, 🇫🇷 French, and 🇪🇸 Spanish.
+🌍 Multilingual User Interface: Available in 🇬🇧 English, 🇫🇷 French, and 🇪🇸 Spanish.
 
-🧭 Predictive Evacuation Routing – Calculates safest exit routes while avoiding blocked roads.
+🧭 Predictive Evacuation Paths: Suggests escape routes that avoid high-risk or blocked roads.
 
-🚧 Dynamic Road Blocking System – Allows user to block/unblock roads, automatically updating routing.
+🚧 Dynamic Road Block System: Block/unblock roads on the fly and auto-adjust pathfinding.
 
-🔔 Real-Time Disaster Alerts – Displays alerts in disaster-prone regions based on request/load intensity.
+🔔 Real-Time Disaster Alerts: Triggers alerts for disaster-prone zones based on traffic and request load.
 
-🌡️ Resource Demand Heatmap (Simulated) – Displays cities with high demand using request clustering.
+🌡️ Resource Heatmap Simulation: Highlights cities with high resource demand via simulated clustering.
 
-📞 Helpline Directory – Lists emergency contact numbers for user assistance.
+📞 Helpline Directory: Displays emergency contact numbers in the selected language.
 
-🧰 Precautionary & Medical Tips – Displays first aid and safety instructions.
+🧰 Precautionary & Medical Tips: Built-in safety and first aid guidance.
 
-💾 File Persistence Layer – Stores all requests, volunteer data, and logs in structured text files.
+💾 Persistent Storage via File I/O: Logs of requests, volunteers, and routing information stored in structured .txt format.
 
 🧠 Tech Stack & Concepts
 
-Language: C++ (OOP, File Handling, STL)
+Language: C++
+
+Paradigm: Object-Oriented, Modular Design
 
 Data Structures: Graphs, Heaps, Queues, Hash Maps, Sets
 
-Algorithms: Dijkstra’s, Priority Queue, Greedy Matching, Dynamic Programming
+Algorithms: Dijkstra, Greedy, Knapsack DP, Priority Queues
 
-Design Principles: Modularized Classes, Encapsulation, System Simulation
+Environment: Terminal / Command Line Interface (CLI)
 
-Interface: Terminal/CLI (Cross-platform)
+File Handling: Used for persistent storage and log simulation
 
-🖼️ Screenshots
+🖼️ Screenshots : 
 
-A full folder of screenshots (/screenshots) is included to visually represent:
+A dedicated folder (/Screenshots) contains images of:
 
-Multilingual menus
+Main Menu
 
-Volunteer management
+Multilingual UI
 
-Routing with roadblocks
+Volunteer Management
 
-Disaster alerts
+Routing with Blocked Roads
 
-Resource heatmaps
+Alerts & Resource Heatmaps
 
-🔍 Why This Project Stands Out
+🔍 Why This Project Matters : 
 
-D-RRAS was built to simulate backend intelligence systems found in logistics hubs, rescue centers, and emergency dispatch systems. Focused entirely on algorithmic efficiency, it showcases problem-solving, DSA fluency, and real-world modeling — critical to SDE and AMTS roles.
+Designed to showcase core problem-solving ability through algorithms and system modeling, D-RRAS simulates the back-end logic that powers real-world disaster response, resource allocation, and rescue operations.
 
-With zero reliance on front-end tools, it instead highlights core coding logic, data structure expertise, and system-level design thinking.
+It goes beyond UI and frameworks to highlight your strengths in:
+
+Algorithmic design
+
+System thinking
+
+Data-driven logic
+Perfectly aligned with the expectations of SDE and AMTS roles at top product-based companies.
 
 🧾 How to Compile & Run
 
@@ -80,6 +89,7 @@ g++ -o drras drras_more_enhanced.cpp
 👨‍💻 Author
 
 Aditya Chaturvedi
-Jaypee Institute of Information Technology
-GitHub: @Aditya-dev2005
 
+Jaypee Institute of Information Technology
+
+GitHub: @Aditya-dev2005
