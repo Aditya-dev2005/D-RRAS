@@ -4,41 +4,41 @@ A C++-based disaster management simulation platform that leverages advanced data
 
 📌 Full Feature Set : 
 
-⚙️ Algorithmic Core
+ Algorithmic Core
 
-✅ Priority Queue (Heap): Handles incoming rescue/help requests by severity and timestamp.
+ Priority Queue (Heap): Handles incoming rescue/help requests by severity and timestamp.
 
-📍 Dijkstra’s Algorithm: Calculates the shortest and safest evacuation paths.
+ Dijkstra’s Algorithm: Calculates the shortest and safest evacuation paths.
 
-🎯 Dynamic Programming (Knapsack): Optimizes resource allocation under constraints.
+ Dynamic Programming (Knapsack): Optimizes resource allocation under constraints.
 
-⚡ Greedy Matching: Assigns volunteers based on skill proximity and availability.
+ Greedy Matching: Assigns volunteers based on skill proximity and availability.
 
-⛔ Real-Time Road Block Handling: Updates graph edges dynamically during routing.
+ Real-Time Road Block Handling: Updates graph edges dynamically during routing.
 
-🧠 AI-Inspired Priority Scoring: Simulates urgency-based triaging logic.
+ AI-Inspired Priority Scoring: Simulates urgency-based triaging logic.
 
 🛠️ Functional Modules : 
 
-🚨 Rescue Request System: Accepts and prioritizes emergency help/resource requests.
+ Rescue Request System: Accepts and prioritizes emergency help/resource requests.
 
-🙋 Volunteer Management System: Register, display, and allocate volunteers based on skills and location. Data is stored persistently.
+ Volunteer Management System: Register, display, and allocate volunteers based on skills and location. Data is stored persistently.
 
-🌍 Multilingual User Interface: Available in 🇬🇧 English, 🇫🇷 French, and 🇪🇸 Spanish.
+ Multilingual User Interface: Available in 🇬🇧 English, 🇫🇷 French, and 🇪🇸 Spanish.
 
-🧭 Predictive Evacuation Paths: Suggests escape routes that avoid high-risk or blocked roads.
+ Predictive Evacuation Paths: Suggests escape routes that avoid high-risk or blocked roads.
 
-🚧 Dynamic Road Block System: Block/unblock roads on the fly and auto-adjust pathfinding.
+ Dynamic Road Block System: Block/unblock roads on the fly and auto-adjust pathfinding.
 
-🔔 Real-Time Disaster Alerts: Triggers alerts for disaster-prone zones based on traffic and request load.
+ Real-Time Disaster Alerts: Triggers alerts for disaster-prone zones based on traffic and request load.
 
-🌡️ Resource Heatmap Simulation: Highlights cities with high resource demand via simulated clustering.
+ Resource Heatmap Simulation: Highlights cities with high resource demand via simulated clustering.
 
-📞 Helpline Directory: Displays emergency contact numbers in the selected language.
+ Helpline Directory: Displays emergency contact numbers in the selected language.
 
-🧰 Precautionary & Medical Tips: Built-in safety and first aid guidance.
+ Precautionary & Medical Tips: Built-in safety and first aid guidance.
 
-💾 Persistent Storage via File I/O: Logs of requests, volunteers, and routing information stored in structured .txt format.
+ Persistent Storage via File I/O: Logs of requests, volunteers, and routing information stored in structured .txt format.
 
 🧠 Tech Stack & Concepts
 
